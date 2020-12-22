@@ -28,12 +28,17 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
+          {% if is_granted("ROLE_REDACTEUR") %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{path("article_show")}}">Mes Articles</a>
+            </li>
+          {% endif %}
+          
+          {% if app.user==null %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Mes Articles</a>
+            <a class="nav-link" href="#">Créer compte</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">A propos</a>
-          </li>
+          {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input
@@ -55,10 +60,21 @@
                 role="button"
                 aria-haspopup="true"
                 aria-expanded="false"
-                >Utilisateur</a
-              >
+                >
+                  {% if app.user %}
+        
+            {{ app.user.nomComplet}}
+            {% else %}
+              Username
+    {% endif %}
+                </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Se Connecter</a>
+                {% if app.user %}
+                  <a class="dropdown-item" href="{{path("app_logout")}}">Se Déconnecter</a>
+                {% else %}
+                  <a class="dropdown-item" href="{{path("app_login")}}">Se Connecter</a>
+                {% endif %}
+                
               </div>
             </li>
           </ul>
@@ -69,7 +85,7 @@
       {% block body %}
         
       {% endblock %}
-
+      {% block pagination %}
       <div class="row text-center">
         <div class="col-sm-4 offset-sm-4">
           <ul class="pagination pl-4">
@@ -97,6 +113,7 @@
             </ul>
         </div>
       </div> 
+      {% endblock %}
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -11,8 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+* @IsGranted("ROLE_REDACTEUR")
+*/
 class ArticleController extends AbstractController
 {
     /**
@@ -20,6 +24,9 @@ class ArticleController extends AbstractController
      */
     public function show(ArticleRepository $repo, Request $request, EntityManagerInterface $manager): Response
     {
+        if (!$this->isGranted("ROLE_REDACTEUR")) {
+            return $this->redirectToRoute("erreur_403");
+        }
         $articles=$repo->findall();
         
         return $this->render('article/index.html.twig', [
